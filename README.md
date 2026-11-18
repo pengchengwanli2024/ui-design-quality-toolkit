@@ -23,6 +23,18 @@ python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-githu
 
 安装 Oil UI Pro 时，请使用其作者提供的独立授权和安装流程。
 
+## 与其他设计技能的边界
+
+本仓库的 `ui-design-quality` 技能与
+[app-ui-studio](https://github.com/pengchengwanli2024/app-ui-studio) 覆盖面高度重叠：
+设计规范适配、Modern Web 质量检查、Lighthouse 报告对比在 app-ui-studio 内都有对应实现
+（`references/design-system.md`、`references/modern-web.md`、`studio.py web-report --baseline`）。
+
+因此**同一个宿主里只装一个**：
+
+- 已经在用 app-ui-studio（Codex 或 Hermes）→ 不要再装本技能，否则两者抢同一触发词。
+- 只想做轻量质量审计、不需要整套设计生产流程 → 只用本技能即可。
+
 可以这样描述任务：
 
 ```text

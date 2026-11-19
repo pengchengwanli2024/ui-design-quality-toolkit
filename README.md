@@ -26,15 +26,15 @@ python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-githu
 
 ## 与其他设计技能的边界
 
-本仓库的 `ui-design-quality` 技能与
-[app-ui-studio](https://github.com/pengchengwanli2024/app-ui-studio) 覆盖面高度重叠：
-设计规范适配、Modern Web 质量检查、Lighthouse 报告对比在 app-ui-studio 内都有对应实现
-（`references/design-system.md`、`references/modern-web.md`、`studio.py web-report --baseline`）。
+本工具包是编排入口，Oil UI Pro 是默认设计负责人，内置 unslop 改编文档是精修参考，Modern Web Guidance 和 Lighthouse 分别提供实现依据与测量证据。
 
-因此**同一个宿主里只装一个**：
+如果同一宿主还装有 [app-ui-studio](https://github.com/pengchengwanli2024/app-ui-studio) 等完整 UI 流程，**同一任务只选择一个编排入口**。技能可以共存；不要同时启动两套方向探索、确认、渲染和审计循环，也不因共存自动卸载技能。用户明确选择其他设计负责人时，以该选择为准。
 
-- 已经在用 app-ui-studio（Codex 或 Hermes）→ 不要再装本技能，否则两者抢同一触发词。
-- 只想做轻量质量审计、不需要整套设计生产流程 → 只用本技能即可。
+## 调用顺序
+
+常规顺序为：**范围与取证 → 必要的修改前基线 → Oil UI Pro 确定/延续方向 → 按需结合 unslop 精修与 Modern Web 实现依据 → 一次统一验证 → 定点修复与复测**。
+
+Modern Web 指南在相关前端代码修改前查阅；性能基线在改动前取得。已有方向和有效证据会复用；小改动、只读审计、纯性能或纯文档任务跳过不相关阶段。详细顺序和职责以 [SKILL.md](SKILL.md#canonical-sequence) 为唯一编排规则，参考文档不各自启动完整流程。
 
 可以这样描述任务：
 

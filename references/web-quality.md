@@ -1,13 +1,12 @@
 # Web 实现与质量补充
 
-用于现有项目的前端设计、改版与质量优化；它补充 Oil UI Pro 的视觉和体验判断。先读与本次变化相关的部分，不为小改动启动整站审计。
+本文件提供 Web 技术判断、检索入口与 Lighthouse 使用细节。调用顺序和检查范围由 [SKILL.md](../SKILL.md#canonical-sequence) 统一决定；读到本文件时继续当前阶段，不重开一套设计、实施和验收流程。
 
-## 从设计决定走到实现
+## 技术资料使用
 
-1. 沿用项目组件、设计变量和用户已确认的界面方向。查看目标浏览器/WebView、现有构建与检查命令、受影响路由和关键状态；未知的支持范围保持为未知，不按本机 Chrome 推断。
-2. 按任务所需能力使用官方 `modern-web-guidance` 的 `search` / `retrieve`。按返回的真实 ID 检索，编译后的兼容性文字优先于源码里的宏。源码的 demo、expectations 用于理解实现和拟定检查点，不表示应用已通过验收。
-3. 在页面中保留现有契约，再选择原生实现或渐进增强。新 API 的适用条件是满足目标浏览器和实际交互需求；已工作的组件不因“更新”而自动替换。核对框架版本、SSR、样式作用域和多实例 ID；按当前类型约定处理新属性，不为一个 API 放宽全局类型或构建目标。
-4. 根据改动运行项目已有的 lint、类型检查、相关测试和必要构建；这些检查覆盖代码质量，Lighthouse 不能替代。实际查看目标视口并操作受影响流程；性能相关变化再按 `$lighthouse` 取得可比较的报告。
+- 使用目标浏览器/WebView 的实际支持范围，未知时不按本机 Chrome 推断。原生实现和渐进增强都需保留项目契约与必要回退，不能为了 API 更新自动替换已工作的组件。
+- 按需使用官方 `modern-web-guidance` 的 `search` / `retrieve`，基于返回的真实 ID 读取指南；在本轮相关客户端改动前完成查询。未变化能力可复用本任务已取回的同版本资料；出现新问题再查对应指南。
+- 编译后的兼容性文字优先于源码里的宏；源码 demo/expectations 是参考条件，不是应用验收结果。核对框架版本、SSR、样式作用域和多实例 ID，按现有类型约定处理新属性，不为单个 API 放宽全局类型或构建目标。
 
 ## 按问题检索并验证
 
@@ -23,16 +22,38 @@
 | 长页面或复杂列表布局绘制昂贵 | `defer-rendering-heavy-content` | `content-visibility: auto` 只用于确认在初始视口外的独立重块，并配估计尺寸 `contain-intrinsic-size`。核验滚动跳动、查找和跨屏键盘可达性；需要可发现的隐藏内容不能随意改成 `content-visibility: hidden`。 |
 | 点击后长时间无反馈、大循环阻塞主线程 | `break-up-long-tasks`、`schedule-tasks-by-priority` | 先用 trace 找到阻塞。分块让出主线程与任务优先级是不同问题；使用 `scheduler.yield()` / `postTask()` 时分别检测支持并保留回退。Promise 微任务拆分本身不保证给浏览器绘制机会。 |
 
-动效与颜色继续按 Oil UI Pro 和项目设计系统决定，并验证减少动态效果偏好、焦点和对比度。技术方案支持产品任务，不自动增加动画、卡片或依赖。
+## Lighthouse
 
-## 测量与验收
+是否测量以及基线/复测的时机见 [统一顺序](../SKILL.md#canonical-sequence)。如果已选择外部 Lighthouse 审计技能或项目已有审计工具，沿用它的当前测量阶段、配置和报告；不要额外运行下面示例形成第二套审计。
 
-- 先确认实际页面、登录态、数据量、构建方式及适用设备。审计跳回登录页时，只能报告登录页的结果。
-- 冷启动页面使用 Lighthouse navigation；已展开菜单、校验错误等状态可用 snapshot；SPA 过渡和交互期间的执行、布局偏移使用 timespan。后两者的可用指标与 navigation 不同，不补造缺失分数。
-- 只有性能优化需要量化结论时，才在同一机器空闲状态下串行重复前后测量并看中位数/范围；不在同机并行跑 Lighthouse。目标和性能预算沿用项目约定，不把任意总分当作完成条件。
-- 检查 Lighthouse 的运行错误、警告和失败 audit，修复拥有这些资源/元素的源代码，再按相同条件复测。用本仓库的 `scripts/summarize.py` 提取报告；它只核对已记录的设置，登录态和数据一致性仍需实际验证。
-- LCP、CLS、TBT 等实验室结果与真实用户的 Core Web Vitals 分开表述；TBT 不能替代 INP。自动无障碍审计之外仍操作键盘、焦点、错误恢复和必要的辅助技术；分数不能证明 WCAG AA 或视觉质量。
-- 交付只汇报本次改动、实际检查与证据、未验证项。只读审查不改代码；没有目标项目时不宣称项目质量已提升。
+没有现成审计流程时，可使用独立安装的官方 Lighthouse CLI 和兼容 Chrome。以下为移动端 navigation 基线示例，替换实际 URL 和任务输出路径，在修改产品前运行：
+
+```sh
+mkdir -p ./reports
+lighthouse 'http://localhost:3000/' --chrome-flags='--headless' --output=html --output=json --output-path='./reports/before' --enable-error-reporting=false
+```
+
+修复已体现在运行页面后，使用相同 URL、设备和配置另存复测报告，不覆盖基线：
+
+```sh
+lighthouse 'http://localhost:3000/' --chrome-flags='--headless' --output=html --output=json --output-path='./reports/after' --enable-error-reporting=false
+```
+
+桌面基线和复测都加 `--preset=desktop`。认证页面需授权登录态；独立 Chrome 进程不会继承活动浏览器会话。确认实际最终 URL、数据量、版本、构建、缓存策略和机器/网络负载；跳回登录页只能说明登录页结果。
+
+### 模式和比较
+
+- navigation 用于页面加载；snapshot 用于已展开菜单、错误态等当前 DOM；timespan 用于 SPA 过渡和交互期间的执行、布局偏移。后两者不提供全部 navigation 指标或总体性能分，不补造分数。
+- 量化性能改善需在同条件下串行重复测量并看中位数/范围，不在同机并行跑 Lighthouse。项目已有预算优先，不把任意总分当作完成条件。
+- 在工具包或已安装技能目录中，用实际报告的绝对路径解析；此脚本读取单个 LHR，不运行浏览器，不接受整份 user-flow 容器（需先选取其中一步的 LHR）：
+
+```sh
+python3 scripts/summarize.py /absolute/path/after.report.json --compare /absolute/path/before.report.json
+```
+
+`valid` 只表示报告执行有效，`partial` 暴露单项 audit 错误；退出 1 表示 Lighthouse 运行失败，退出 2 表示输入无效。脚本严格比较完整 `configSettings` 和部分页面/环境信息；设置不同时不生成差值，未知值、未知或不一致单位在 `skipped_metric_deltas` 中给出原因。`settings_match` 不证明相同登录态、数据、构建、实际缓存或稳定改善；警告、最终 URL 和比较条件仍需核验。
+
+将运行错误、失败 audit 和受影响资源/元素返回当前实现与验证阶段；报告分数差值不等于问题已解决。LCP、CLS、TBT 等实验室结果与真实用户 Core Web Vitals 分开表述，TBT 不能替代 INP，自动无障碍分数也不证明完整 WCAG 合规或视觉质量。
 
 ## 来源与更新边界
 

@@ -9,6 +9,7 @@
 - `SKILL.md`：按任务范围组合设计、实现与验证流程。
 - `references/design-md-library.md`：从 awesome-design-md 等参考中提炼项目规则，记录适用页面与证据缺口。
 - `references/web-quality.md`：现代浏览器能力、兼容性、响应式、表单、图片和主线程问题的检索与验证入口。
+- `references/unslop-refinement.md`：从 unslop 改编的去模板化诊断与分层精修方法，覆盖间距、色彩、图标、文案、字体、布局、组件细节、素材和动效。
 - `assets/DESIGN.template.md`：项目设计规范的最小模板。
 - `scripts/summarize.py`：本地解析 Lighthouse JSON，保留不可用分数，识别错误，检查比较条件与指标单位。
 - `tests/`：报告工具的回归测试。
@@ -43,6 +44,8 @@ python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-githu
 完成相关代码检查、实际交互和目标视口验证；性能相关改动保留前后审计证据。
 ```
 
+用户提到“去 AI 味”“去模板感”或需要视觉精修时，会按需使用 unslop 整合参考：先记录具体问题，再按产品任务和既有规范修整。已确认的品牌、业务内容与功能状态继续作为约束；这条路径与上面的设计和质量流程共用入口。
+
 只有设计文档分析时，不需要浏览器或 Lighthouse。正式界面的视觉与交互验证需要可运行页面和实际浏览器；真实审计还需用户自行安装 Lighthouse 与 Chrome。
 
 ## 报告解析
@@ -70,6 +73,6 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
 
 ## 来源与许可
 
-本仓库的原创整合文档、模板和代码使用 MIT 许可。方法来源和各项目关系见 [NOTICE.md](NOTICE.md)，具体参考链接在相应文档中。
+本仓库的原创整合文档、模板和代码使用 MIT 许可。[unslop 精修改编文档](references/unslop-refinement.md) 单独采用 CC BY 4.0，保留 Damir Sokolovsky（@heydamir）署名、原仓库链接和改编说明；许可全文见 [LICENSES/CC-BY-4.0.txt](LICENSES/CC-BY-4.0.txt)。方法来源和各项目关系见 [NOTICE.md](NOTICE.md)。
 
 这是独立社区整合，不代表 Oil UI Pro、Google Chrome、VoltAgent 或任何参考品牌的官方产品。依赖工具和付费技能由用户按各自条件另行安装。

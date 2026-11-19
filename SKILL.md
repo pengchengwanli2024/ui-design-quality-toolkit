@@ -1,6 +1,6 @@
 ---
 name: ui-design-quality
-description: Use for interface design, UI renovation, or frontend quality optimization that combines product-specific design judgment, DESIGN.md references, modern browser guidance, and measured verification. Complements an independently installed Oil UI Pro skill; small edits use only the affected checks.
+description: Use for interface design, UI renovation, refinement of generic AI-looking UI, or frontend quality optimization that combines product-specific design judgment, DESIGN.md references, modern browser guidance, and measured verification. Complements an independently installed Oil UI Pro skill; small edits use only the affected checks.
 license: MIT
 ---
 
@@ -12,6 +12,7 @@ Combine design decisions with implementation evidence. Use the project's brand, 
 
 - For new interface design or renovation, use the user's installed design skill, preferring Oil UI Pro when available and requested as their default. Read it from the actual installation; this repository does not include its implementation. If unavailable, disclose that and continue the authorized work using the project's existing design rules.
 - For an existing design-document library or external visual reference, read [reference selection and adaptation](references/design-md-library.md). Distinguish marketing sites, applications, shops and individual components. Map adopted roles to actual project tokens and components; record gaps rather than inventing unseen states.
+- For generic AI-looking UI, excessive decoration, inconsistent visual craft, or the relevant final refinement pass, read [product-specific UI refinement](references/unslop-refinement.md), adapted from unslop. Diagnose the actual issue and change only the affected layers; keep confirmed brand assets, business semantics and working states rather than treating a visual pattern as a universal defect.
 - For browser implementation, compatibility, accessibility or performance decisions, read the relevant parts of [web implementation quality](references/web-quality.md). Search and retrieve the current official Modern Web Guidance rather than treating an old API-support snapshot as permanent.
 - For a small, explicit change, verify its affected states and adjacent layout. A full redesign or site-wide audit is not the default for changing text or reusing an existing style.
 
